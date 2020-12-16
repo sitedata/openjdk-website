@@ -2571,17 +2571,17 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 },{"./_global":29,"./_hide":31,"./_iterators":45,"./_object-keys":58,"./_redefine":63,"./_wks":86,"./es6.array.iterator":91}],114:[function(require,module,exports){
 "use strict";
 
-require("core-js/modules/es6.string.iterator");
+require("core-js/modules/es6.string.iterator.js");
 
-require("core-js/modules/es6.array.from");
+require("core-js/modules/es6.array.from.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.string.link");
+require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
 var _require = require('./common'),
     findPlatform = _require.findPlatform,
@@ -2697,51 +2697,51 @@ function setPagination() {
   }
 }
 
-},{"./common":115,"core-js/modules/es6.array.from":90,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.iterator":107,"core-js/modules/es6.string.link":108,"core-js/modules/es7.array.includes":111}],115:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108,"core-js/modules/es7.array.includes.js":111}],115:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
-require("core-js/modules/es7.symbol.async-iterator");
+require("core-js/modules/es7.symbol.async-iterator.js");
 
-require("core-js/modules/es6.symbol");
+require("core-js/modules/es6.symbol.js");
 
-require("core-js/modules/es6.function.name");
+require("core-js/modules/es6.function.name.js");
 
-require("core-js/modules/es6.regexp.to-string");
+require("core-js/modules/es6.regexp.to-string.js");
 
-require("core-js/modules/es6.regexp.match");
+require("core-js/modules/es6.regexp.match.js");
 
-require("core-js/modules/es6.regexp.split");
+require("core-js/modules/es6.regexp.split.js");
 
-require("core-js/modules/es6.string.iterator");
+require("core-js/modules/es6.string.iterator.js");
 
-require("core-js/modules/es6.array.from");
+require("core-js/modules/es6.array.from.js");
 
-require("core-js/modules/es6.regexp.constructor");
+require("core-js/modules/es6.regexp.constructor.js");
 
-require("core-js/modules/es6.regexp.search");
+require("core-js/modules/es6.regexp.search.js");
 
-require("core-js/modules/es6.string.ends-with");
+require("core-js/modules/es6.string.ends-with.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.object.assign");
+require("core-js/modules/es6.object.assign.js");
 
-require("core-js/modules/es6.array.find-index");
+require("core-js/modules/es6.array.find-index.js");
 
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/web.dom.iterable.js");
 
-require("core-js/modules/es6.array.iterator");
+require("core-js/modules/es6.array.iterator.js");
 
-require("core-js/modules/es6.object.to-string");
+require("core-js/modules/es6.object.to-string.js");
 
-require("core-js/modules/es6.object.keys");
+require("core-js/modules/es6.object.keys.js");
 
-require("core-js/modules/es6.array.find");
+require("core-js/modules/es6.array.find.js");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -3247,12 +3247,12 @@ global.copyStringToClipboard = function () {
 };
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../json/config":123,"core-js/modules/es6.array.find":89,"core-js/modules/es6.array.find-index":88,"core-js/modules/es6.array.from":90,"core-js/modules/es6.array.iterator":91,"core-js/modules/es6.function.name":92,"core-js/modules/es6.object.assign":93,"core-js/modules/es6.object.keys":94,"core-js/modules/es6.object.to-string":95,"core-js/modules/es6.regexp.constructor":96,"core-js/modules/es6.regexp.match":99,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.regexp.search":101,"core-js/modules/es6.regexp.split":102,"core-js/modules/es6.regexp.to-string":103,"core-js/modules/es6.string.ends-with":105,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.iterator":107,"core-js/modules/es6.symbol":110,"core-js/modules/es7.array.includes":111,"core-js/modules/es7.symbol.async-iterator":112,"core-js/modules/web.dom.iterable":113}],116:[function(require,module,exports){
+},{"../json/config":123,"core-js/modules/es6.array.find-index.js":88,"core-js/modules/es6.array.find.js":89,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.array.iterator.js":91,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.object.assign.js":93,"core-js/modules/es6.object.keys.js":94,"core-js/modules/es6.object.to-string.js":95,"core-js/modules/es6.regexp.constructor.js":96,"core-js/modules/es6.regexp.match.js":99,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.search.js":101,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.regexp.to-string.js":103,"core-js/modules/es6.string.ends-with.js":105,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.symbol.js":110,"core-js/modules/es7.array.includes.js":111,"core-js/modules/es7.symbol.async-iterator.js":112,"core-js/modules/web.dom.iterable.js":113}],116:[function(require,module,exports){
 "use strict";
 
-require("core-js/modules/es6.regexp.split");
+require("core-js/modules/es6.regexp.split.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
 var _require = require('./common'),
     buildMenuTwisties = _require.buildMenuTwisties,
@@ -3289,26 +3289,26 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-},{"./archive":114,"./common":115,"./index":117,"./installation":118,"./nightly":119,"./releases":120,"./testimonials":121,"./upstream":122,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.regexp.split":102}],117:[function(require,module,exports){
+},{"./archive":114,"./common":115,"./index":117,"./installation":118,"./nightly":119,"./releases":120,"./testimonials":121,"./upstream":122,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.split.js":102}],117:[function(require,module,exports){
 "use strict";
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.string.link");
+require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/web.dom.iterable.js");
 
-require("core-js/modules/es6.array.iterator");
+require("core-js/modules/es6.array.iterator.js");
 
-require("core-js/modules/es6.object.to-string");
+require("core-js/modules/es6.object.to-string.js");
 
-require("core-js/modules/es6.object.keys");
+require("core-js/modules/es6.object.keys.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
-require("core-js/modules/es6.function.name");
+require("core-js/modules/es6.function.name.js");
 
 var _require = require('./common'),
     detectOS = _require.detectOS,
@@ -3447,22 +3447,22 @@ function buildHomepageHTML(releasesJson, jckJSON, OS) {
   }, 1000);
 }
 
-},{"./common":115,"core-js/modules/es6.array.iterator":91,"core-js/modules/es6.function.name":92,"core-js/modules/es6.object.keys":94,"core-js/modules/es6.object.to-string":95,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.link":108,"core-js/modules/es7.array.includes":111,"core-js/modules/web.dom.iterable":113}],118:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.iterator.js":91,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.object.keys.js":94,"core-js/modules/es6.object.to-string.js":95,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.link.js":108,"core-js/modules/es7.array.includes.js":111,"core-js/modules/web.dom.iterable.js":113}],118:[function(require,module,exports){
 "use strict";
 
-require("core-js/modules/es6.string.iterator");
+require("core-js/modules/es6.string.iterator.js");
 
-require("core-js/modules/es6.array.from");
+require("core-js/modules/es6.array.from.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.string.link");
+require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
-require("core-js/modules/es6.function.name");
+require("core-js/modules/es6.function.name.js");
 
 var _require = require('./common'),
     detectOS = _require.detectOS,
@@ -3633,22 +3633,22 @@ function copyElementTextContent(target) {
   document.body.removeChild(input);
 }
 
-},{"./common":115,"core-js/modules/es6.array.from":90,"core-js/modules/es6.function.name":92,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.iterator":107,"core-js/modules/es6.string.link":108,"core-js/modules/es7.array.includes":111}],119:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108,"core-js/modules/es7.array.includes.js":111}],119:[function(require,module,exports){
 "use strict";
 
-require("core-js/modules/es6.regexp.split");
+require("core-js/modules/es6.regexp.split.js");
 
-require("core-js/modules/es6.regexp.constructor");
+require("core-js/modules/es6.regexp.constructor.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.string.link");
+require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
-require("core-js/modules/es6.function.name");
+require("core-js/modules/es6.function.name.js");
 
 var _require = require('./common'),
     findPlatform = _require.findPlatform,
@@ -3809,43 +3809,43 @@ function setSearchLogic() {
   });
 }
 
-},{"./common":115,"core-js/modules/es6.function.name":92,"core-js/modules/es6.regexp.constructor":96,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.regexp.split":102,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.link":108,"core-js/modules/es7.array.includes":111}],120:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.constructor.js":96,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.link.js":108,"core-js/modules/es7.array.includes.js":111}],120:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
-require("core-js/modules/es7.symbol.async-iterator");
+require("core-js/modules/es7.symbol.async-iterator.js");
 
-require("core-js/modules/es6.symbol");
+require("core-js/modules/es6.symbol.js");
 
-require("core-js/modules/es6.array.from");
+require("core-js/modules/es6.array.from.js");
 
-require("core-js/modules/es6.function.name");
+require("core-js/modules/es6.function.name.js");
 
-require("core-js/modules/es6.regexp.to-string");
+require("core-js/modules/es6.regexp.to-string.js");
 
-require("core-js/modules/es6.string.starts-with");
+require("core-js/modules/es6.string.starts-with.js");
 
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/web.dom.iterable.js");
 
-require("core-js/modules/es6.array.iterator");
+require("core-js/modules/es6.array.iterator.js");
 
-require("core-js/modules/es6.object.to-string");
+require("core-js/modules/es6.object.to-string.js");
 
-require("core-js/modules/es6.string.iterator");
+require("core-js/modules/es6.string.iterator.js");
 
-require("core-js/modules/es6.set");
+require("core-js/modules/es6.set.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.string.link");
+require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/es6.array.find");
+require("core-js/modules/es6.array.find.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
-require("core-js/modules/es6.regexp.split");
+require("core-js/modules/es6.regexp.split.js");
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -4160,7 +4160,7 @@ function filterTable(string, type, string1) {
 }
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./common":115,"core-js/modules/es6.array.find":89,"core-js/modules/es6.array.from":90,"core-js/modules/es6.array.iterator":91,"core-js/modules/es6.function.name":92,"core-js/modules/es6.object.to-string":95,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.regexp.split":102,"core-js/modules/es6.regexp.to-string":103,"core-js/modules/es6.set":104,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.iterator":107,"core-js/modules/es6.string.link":108,"core-js/modules/es6.string.starts-with":109,"core-js/modules/es6.symbol":110,"core-js/modules/es7.array.includes":111,"core-js/modules/es7.symbol.async-iterator":112,"core-js/modules/web.dom.iterable":113}],121:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.find.js":89,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.array.iterator.js":91,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.object.to-string.js":95,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.regexp.to-string.js":103,"core-js/modules/es6.set.js":104,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108,"core-js/modules/es6.string.starts-with.js":109,"core-js/modules/es6.symbol.js":110,"core-js/modules/es7.array.includes.js":111,"core-js/modules/es7.symbol.async-iterator.js":112,"core-js/modules/web.dom.iterable.js":113}],121:[function(require,module,exports){
 "use strict";
 
 module.exports.load = function () {
@@ -4176,41 +4176,41 @@ module.exports.load = function () {
 (function (global){(function (){
 "use strict";
 
-require("core-js/modules/es7.symbol.async-iterator");
+require("core-js/modules/es7.symbol.async-iterator.js");
 
-require("core-js/modules/es6.symbol");
+require("core-js/modules/es6.symbol.js");
 
-require("core-js/modules/es6.function.name");
+require("core-js/modules/es6.function.name.js");
 
-require("core-js/modules/es6.regexp.to-string");
+require("core-js/modules/es6.regexp.to-string.js");
 
-require("core-js/modules/es6.string.starts-with");
+require("core-js/modules/es6.string.starts-with.js");
 
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/web.dom.iterable.js");
 
-require("core-js/modules/es6.array.iterator");
+require("core-js/modules/es6.array.iterator.js");
 
-require("core-js/modules/es6.object.to-string");
+require("core-js/modules/es6.object.to-string.js");
 
-require("core-js/modules/es6.set");
+require("core-js/modules/es6.set.js");
 
-require("core-js/modules/es6.string.link");
+require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/es7.array.includes");
+require("core-js/modules/es7.array.includes.js");
 
-require("core-js/modules/es6.string.includes");
+require("core-js/modules/es6.string.includes.js");
 
-require("core-js/modules/es6.regexp.replace");
+require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.regexp.split");
+require("core-js/modules/es6.regexp.split.js");
 
-require("core-js/modules/es6.string.iterator");
+require("core-js/modules/es6.string.iterator.js");
 
-require("core-js/modules/es6.array.from");
+require("core-js/modules/es6.array.from.js");
 
-require("core-js/modules/es6.array.find");
+require("core-js/modules/es6.array.find.js");
 
-require("core-js/modules/es6.regexp.search");
+require("core-js/modules/es6.regexp.search.js");
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -4542,7 +4542,7 @@ function filterTable(string, type, string1) {
 }
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./common":115,"core-js/modules/es6.array.find":89,"core-js/modules/es6.array.from":90,"core-js/modules/es6.array.iterator":91,"core-js/modules/es6.function.name":92,"core-js/modules/es6.object.to-string":95,"core-js/modules/es6.regexp.replace":100,"core-js/modules/es6.regexp.search":101,"core-js/modules/es6.regexp.split":102,"core-js/modules/es6.regexp.to-string":103,"core-js/modules/es6.set":104,"core-js/modules/es6.string.includes":106,"core-js/modules/es6.string.iterator":107,"core-js/modules/es6.string.link":108,"core-js/modules/es6.string.starts-with":109,"core-js/modules/es6.symbol":110,"core-js/modules/es7.array.includes":111,"core-js/modules/es7.symbol.async-iterator":112,"core-js/modules/web.dom.iterable":113}],123:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.find.js":89,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.array.iterator.js":91,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.object.to-string.js":95,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.search.js":101,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.regexp.to-string.js":103,"core-js/modules/es6.set.js":104,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108,"core-js/modules/es6.string.starts-with.js":109,"core-js/modules/es6.symbol.js":110,"core-js/modules/es7.array.includes.js":111,"core-js/modules/es7.symbol.async-iterator.js":112,"core-js/modules/web.dom.iterable.js":113}],123:[function(require,module,exports){
 module.exports={
   "variants": [
     {
