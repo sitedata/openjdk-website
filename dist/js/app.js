@@ -2586,8 +2586,6 @@ require("core-js/modules/es6.string.includes.js");
 var _require = require('./common'),
     findPlatform = _require.findPlatform,
     detectEA = _require.detectEA,
-    getBinaryExt = _require.getBinaryExt,
-    getInstallerExt = _require.getInstallerExt,
     getOfficialName = _require.getOfficialName,
     getPlatformOrder = _require.getPlatformOrder,
     loadAssetInfo = _require.loadAssetInfo,
@@ -2649,7 +2647,6 @@ function buildArchiveHTML(aReleases) {
 
       var binary_constructor = {
         type: binary_type,
-        extension: 'INSTALLER' === binary_type ? getInstallerExt(platform) : getBinaryExt(platform),
         link: aReleaseAsset.package.link,
         checksum: aReleaseAsset.package.checksum,
         size: Math.floor(aReleaseAsset.package.size / 1000 / 1000)
@@ -2658,7 +2655,6 @@ function buildArchiveHTML(aReleases) {
       if (aReleaseAsset.installer) {
         binary_constructor.installer_link = aReleaseAsset.installer.link;
         binary_constructor.installer_checksum = aReleaseAsset.installer.checksum;
-        binary_constructor.installer_extension = getInstallerExt(platform);
         binary_constructor.installer_size = Math.floor(aReleaseAsset.installer.size / 1000 / 1000);
       } // Add the new binary to the release asset
 
@@ -2831,16 +2827,6 @@ var sortByProperty = module.exports.sortByProperty = function (input, property, 
       });
     }).sort(sorter);
   }
-}; // gets the BINARY EXTENSION when you pass in 'searchableName'
-
-
-module.exports.getBinaryExt = function (searchableName) {
-  return lookup[searchableName].binaryExtension;
-}; // gets the INSTALLER EXTENSION when you pass in 'searchableName'
-
-
-module.exports.getInstallerExt = function (searchableName) {
-  return lookup[searchableName].installerExtension;
 }; // gets the Supported Version WITH PATH when you pass in 'searchableName'
 // Version numbers use >= logic and need to be specified in ascending order
 
@@ -3296,6 +3282,10 @@ require("core-js/modules/es6.regexp.replace.js");
 
 require("core-js/modules/es6.string.link.js");
 
+require("core-js/modules/es7.array.includes.js");
+
+require("core-js/modules/es6.string.includes.js");
+
 require("core-js/modules/web.dom.iterable.js");
 
 require("core-js/modules/es6.array.iterator.js");
@@ -3304,16 +3294,11 @@ require("core-js/modules/es6.object.to-string.js");
 
 require("core-js/modules/es6.object.keys.js");
 
-require("core-js/modules/es7.array.includes.js");
-
-require("core-js/modules/es6.string.includes.js");
-
 require("core-js/modules/es6.function.name.js");
 
 var _require = require('./common'),
     detectOS = _require.detectOS,
     findPlatform = _require.findPlatform,
-    getBinaryExt = _require.getBinaryExt,
     loadLatestAssets = _require.loadLatestAssets,
     makeQueryString = _require.makeQueryString,
     setRadioSelectors = _require.setRadioSelectors,
@@ -3382,25 +3367,21 @@ function buildHomepageHTML(releasesJson, jckJSON, OS) {
       if (thisPlatform) {
         // secondly, check if the file has the expected file extension for that platform...
         // (this filters out all non-binary attachments, e.g. SHA checksums - these contain the platform name, but are not binaries)
-        var thisBinaryExtension = getBinaryExt(thisPlatform); // get the binary extension associated with this platform
-
         if (matchingFile == null) {
-          if (uppercaseFilename.includes(thisBinaryExtension.toUpperCase())) {
-            var uppercaseOSname = OS.searchableName.toUpperCase();
+          var uppercaseOSname = OS.searchableName.toUpperCase();
 
-            if (Object.keys(jckJSON).length !== 0) {
-              if (jckJSON[releasesJson.tag_name] && Object.prototype.hasOwnProperty.call(jckJSON[releasesJson.tag_name], uppercaseOSname)) {
-                document.getElementById('jck-approved-tick').classList.remove('hide');
-                setTickLink();
-              }
-            } // thirdly check if JDK or JRE (we want to serve JDK by default)
+          if (Object.keys(jckJSON).length !== 0) {
+            if (jckJSON[releasesJson.tag_name] && Object.prototype.hasOwnProperty.call(jckJSON[releasesJson.tag_name], uppercaseOSname)) {
+              document.getElementById('jck-approved-tick').classList.remove('hide');
+              setTickLink();
+            }
+          } // thirdly check if JDK or JRE (we want to serve JDK by default)
 
 
-            if (eachAsset.binary.image_type == 'jdk') {
-              // fourthly, check if the user's OS searchableName string matches part of this binary's name (e.g. ...X64_LINUX...)
-              if (uppercaseFilename.includes(uppercaseOSname)) {
-                matchingFile = eachAsset; // set the matchingFile variable to the object containing this binary
-              }
+          if (eachAsset.binary.image_type == 'jdk') {
+            // fourthly, check if the user's OS searchableName string matches part of this binary's name (e.g. ...X64_LINUX...)
+            if (uppercaseFilename.includes(uppercaseOSname)) {
+              matchingFile = eachAsset; // set the matchingFile variable to the object containing this binary
             }
           }
         }
@@ -3456,18 +3437,13 @@ require("core-js/modules/es6.array.from.js");
 
 require("core-js/modules/es6.regexp.replace.js");
 
-require("core-js/modules/es6.string.link.js");
-
-require("core-js/modules/es7.array.includes.js");
-
-require("core-js/modules/es6.string.includes.js");
-
 require("core-js/modules/es6.function.name.js");
+
+require("core-js/modules/es6.string.link.js");
 
 var _require = require('./common'),
     detectOS = _require.detectOS,
     findPlatform = _require.findPlatform,
-    getBinaryExt = _require.getBinaryExt,
     getChecksumCommand = _require.getChecksumCommand,
     getInstallCommand = _require.getInstallCommand,
     getOfficialName = _require.getOfficialName,
@@ -3502,41 +3478,35 @@ function buildInstallationHTML(releasesJson) {
 
   assetArray.forEach(function (eachAsset) {
     var ASSETOBJECT = {};
-    var uppercaseFilename = eachAsset.package.name.toUpperCase();
     ASSETOBJECT.thisPlatform = findPlatform(eachAsset); // check if the platform name is recognised...
 
     if (ASSETOBJECT.thisPlatform) {
       ASSETOBJECT.thisPlatformOrder = getPlatformOrder(ASSETOBJECT.thisPlatform);
       ASSETOBJECT.thisOfficialName = getOfficialName(ASSETOBJECT.thisPlatform) + ' ' + eachAsset.image_type;
-      ASSETOBJECT.thisPlatformType = (ASSETOBJECT.thisPlatform + '-' + eachAsset.image_type).toUpperCase(); // if the filename contains both the platform name and the matching BINARY extension, add the relevant info to the asset object
+      ASSETOBJECT.thisPlatformType = (ASSETOBJECT.thisPlatform + '-' + eachAsset.image_type).toUpperCase();
+      ASSETOBJECT.thisPlatformExists = true;
+      ASSETOBJECT.thisBinaryLink = eachAsset.package.link;
+      ASSETOBJECT.thisBinaryFilename = eachAsset.package.name;
+      ASSETOBJECT.thisChecksum = eachAsset.package.checksum;
+      ASSETOBJECT.thisChecksumLink = eachAsset.package.checksum_link;
+      ASSETOBJECT.thisChecksumFilename = eachAsset.package.name.replace(ASSETOBJECT.thisBinaryExtension, '.sha256.txt');
+      ASSETOBJECT.thisUnzipCommand = getInstallCommand(ASSETOBJECT.thisPlatform).replace('FILENAME', ASSETOBJECT.thisBinaryFilename);
+      ASSETOBJECT.thisChecksumCommand = getChecksumCommand(ASSETOBJECT.thisPlatform).replace('FILENAME', ASSETOBJECT.thisBinaryFilename); // the check sum auto command hint is always printed,
+      // so we just configure with empty string if not present
 
-      ASSETOBJECT.thisBinaryExtension = getBinaryExt(ASSETOBJECT.thisPlatform);
+      ASSETOBJECT.thisChecksumAutoCommandHint = getChecksumAutoCommandHint(ASSETOBJECT.thisPlatform) || ''; // build download sha256 and verify auto command
 
-      if (uppercaseFilename.includes(ASSETOBJECT.thisBinaryExtension.toUpperCase())) {
-        ASSETOBJECT.thisPlatformExists = true;
-        ASSETOBJECT.thisBinaryLink = eachAsset.package.link;
-        ASSETOBJECT.thisBinaryFilename = eachAsset.package.name;
-        ASSETOBJECT.thisChecksum = eachAsset.package.checksum;
-        ASSETOBJECT.thisChecksumLink = eachAsset.package.checksum_link;
-        ASSETOBJECT.thisChecksumFilename = eachAsset.package.name.replace(ASSETOBJECT.thisBinaryExtension, '.sha256.txt');
-        ASSETOBJECT.thisUnzipCommand = getInstallCommand(ASSETOBJECT.thisPlatform).replace('FILENAME', ASSETOBJECT.thisBinaryFilename);
-        ASSETOBJECT.thisChecksumCommand = getChecksumCommand(ASSETOBJECT.thisPlatform).replace('FILENAME', ASSETOBJECT.thisBinaryFilename); // the check sum auto command hint is always printed,
-        // so we just configure with empty string if not present
+      var thisChecksumAutoCommand = getChecksumAutoCommand(ASSETOBJECT.thisPlatform);
+      var sha256FileName = ASSETOBJECT.thisChecksumLink;
+      var separator = sha256FileName.lastIndexOf('/');
 
-        ASSETOBJECT.thisChecksumAutoCommandHint = getChecksumAutoCommandHint(ASSETOBJECT.thisPlatform) || ''; // build download sha256 and verify auto command
-
-        var thisChecksumAutoCommand = getChecksumAutoCommand(ASSETOBJECT.thisPlatform);
-        var sha256FileName = ASSETOBJECT.thisChecksumLink;
-        var separator = sha256FileName.lastIndexOf('/');
-
-        if (separator > -1) {
-          sha256FileName = sha256FileName.substring(separator + 1);
-        }
-
-        ASSETOBJECT.thisChecksumAutoCommand = thisChecksumAutoCommand.replace(/FILEHASHURL/g, ASSETOBJECT.thisChecksumLink).replace(/FILEHASHNAME/g, sha256FileName).replace(/FILENAME/g, ASSETOBJECT.thisBinaryFilename);
-        var dirName = releasesJson[0].release_name + (eachAsset.image_type === 'jre' ? '-jre' : '');
-        ASSETOBJECT.thisPathCommand = getPathCommand(ASSETOBJECT.thisPlatform).replace('DIRNAME', dirName);
+      if (separator > -1) {
+        sha256FileName = sha256FileName.substring(separator + 1);
       }
+
+      ASSETOBJECT.thisChecksumAutoCommand = thisChecksumAutoCommand.replace(/FILEHASHURL/g, ASSETOBJECT.thisChecksumLink).replace(/FILEHASHNAME/g, sha256FileName).replace(/FILENAME/g, ASSETOBJECT.thisBinaryFilename);
+      var dirName = releasesJson[0].release_name + (eachAsset.image_type === 'jre' ? '-jre' : '');
+      ASSETOBJECT.thisPathCommand = getPathCommand(ASSETOBJECT.thisPlatform).replace('DIRNAME', dirName);
 
       if (ASSETOBJECT.thisPlatformExists) {
         ASSETARRAY.push(ASSETOBJECT);
@@ -3633,10 +3603,8 @@ function copyElementTextContent(target) {
   document.body.removeChild(input);
 }
 
-},{"./common":115,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108,"core-js/modules/es7.array.includes.js":111}],119:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108}],119:[function(require,module,exports){
 "use strict";
-
-require("core-js/modules/es6.regexp.split.js");
 
 require("core-js/modules/es6.regexp.constructor.js");
 
@@ -3644,17 +3612,13 @@ require("core-js/modules/es6.regexp.replace.js");
 
 require("core-js/modules/es6.string.link.js");
 
-require("core-js/modules/es7.array.includes.js");
-
-require("core-js/modules/es6.string.includes.js");
-
 require("core-js/modules/es6.function.name.js");
+
+require("core-js/modules/es6.regexp.split.js");
 
 var _require = require('./common'),
     findPlatform = _require.findPlatform,
-    getBinaryExt = _require.getBinaryExt,
     getOfficialName = _require.getOfficialName,
-    getInstallerExt = _require.getInstallerExt,
     loadAssetInfo = _require.loadAssetInfo,
     setRadioSelectors = _require.setRadioSelectors;
 
@@ -3671,6 +3635,15 @@ var datepicker = document.getElementById('datepicker');
 var templateString = $('#template').html(); // When nightly page loads, run:
 
 module.exports.load = function () {
+  Handlebars.registerHelper('fetchExtension', function (filename) {
+    var extension = ".".concat(filename.split('.').pop()); // Workaround to prevent extension returning as .gz
+
+    if (extension == '.gz') {
+      extension = '.tar.gz';
+    }
+
+    return extension;
+  });
   setRadioSelectors();
   setDatePicker();
   populateNightly(); // run the function to populate the table on the Nightly page.
@@ -3729,37 +3702,28 @@ function buildNightlyHTML(files) {
     var eachAsset = file.asset;
     var eachRelease = file.release;
     var NIGHTLYOBJECT = {};
-    var nameOfFile = eachAsset.package.name;
     var type = eachAsset.image_type;
     NIGHTLYOBJECT.thisPlatform = findPlatform(eachAsset); // get the searchableName, e.g. MAC or X64_LINUX.
-    // secondly, check if the file has the expected file extension for that platform...
-    // (this filters out all non-binary attachments, e.g. SHA checksums - these contain the platform name, but are not binaries)
+    // set values ready to be injected into the HTML
 
-    NIGHTLYOBJECT.thisBinaryExtension = getBinaryExt(NIGHTLYOBJECT.thisPlatform); // get the file extension associated with this platform
+    var publishedAt = eachRelease.timestamp;
+    NIGHTLYOBJECT.thisReleaseName = eachRelease.release_name.slice(0, 12);
+    NIGHTLYOBJECT.thisType = type;
+    NIGHTLYOBJECT.thisHeapSize = eachAsset.heap_size;
+    NIGHTLYOBJECT.thisReleaseDay = moment(publishedAt).format('D');
+    NIGHTLYOBJECT.thisReleaseMonth = moment(publishedAt).format('MMMM');
+    NIGHTLYOBJECT.thisReleaseYear = moment(publishedAt).format('YYYY');
+    NIGHTLYOBJECT.thisGitLink = eachRelease.release_link;
+    NIGHTLYOBJECT.thisOfficialName = getOfficialName(NIGHTLYOBJECT.thisPlatform);
+    NIGHTLYOBJECT.thisBinaryLink = eachAsset.package.link;
+    NIGHTLYOBJECT.thisBinarySize = Math.floor(eachAsset.package.size / 1000 / 1000);
+    NIGHTLYOBJECT.thisChecksum = eachAsset.package.checksum;
 
-    NIGHTLYOBJECT.thisInstalleExtension = getInstallerExt(NIGHTLYOBJECT.thisPlatform);
-
-    if (nameOfFile.toUpperCase().includes(NIGHTLYOBJECT.thisBinaryExtension.toUpperCase())) {
-      // set values ready to be injected into the HTML
-      var publishedAt = eachRelease.timestamp;
-      NIGHTLYOBJECT.thisReleaseName = eachRelease.release_name.slice(0, 12);
-      NIGHTLYOBJECT.thisType = type;
-      NIGHTLYOBJECT.thisHeapSize = eachAsset.heap_size;
-      NIGHTLYOBJECT.thisReleaseDay = moment(publishedAt).format('D');
-      NIGHTLYOBJECT.thisReleaseMonth = moment(publishedAt).format('MMMM');
-      NIGHTLYOBJECT.thisReleaseYear = moment(publishedAt).format('YYYY');
-      NIGHTLYOBJECT.thisGitLink = eachRelease.release_link;
-      NIGHTLYOBJECT.thisOfficialName = getOfficialName(NIGHTLYOBJECT.thisPlatform);
-      NIGHTLYOBJECT.thisBinaryLink = eachAsset.package.link;
-      NIGHTLYOBJECT.thisBinarySize = Math.floor(eachAsset.package.size / 1000 / 1000);
-      NIGHTLYOBJECT.thisChecksum = eachAsset.package.checksum;
-
-      if (eachAsset.installer) {
-        NIGHTLYOBJECT.thisInstallerLink = eachAsset.installer.link;
-      }
-
-      NIGHTLYARRAY.push(NIGHTLYOBJECT);
+    if (eachAsset.installer) {
+      NIGHTLYOBJECT.thisInstallerLink = eachAsset.installer.link;
     }
+
+    NIGHTLYARRAY.push(NIGHTLYOBJECT);
   });
   var template = Handlebars.compile(templateString);
   nightlyList.innerHTML = template({
@@ -3809,7 +3773,7 @@ function setSearchLogic() {
   });
 }
 
-},{"./common":115,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.constructor.js":96,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.string.includes.js":106,"core-js/modules/es6.string.link.js":108,"core-js/modules/es7.array.includes.js":111}],120:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.constructor.js":96,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.string.link.js":108}],120:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
@@ -3855,8 +3819,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var _require = require('./common'),
     findPlatform = _require.findPlatform,
-    getBinaryExt = _require.getBinaryExt,
-    getInstallerExt = _require.getInstallerExt,
     getSupportedVersion = _require.getSupportedVersion,
     getOfficialName = _require.getOfficialName,
     getPlatformOrder = _require.getPlatformOrder,
@@ -3882,8 +3844,14 @@ module.exports.load = function () {
   Handlebars.registerHelper('fetchArch', function (title) {
     return title.split(' ')[1];
   });
-  Handlebars.registerHelper('fetchInstallerExt', function (filename) {
-    return ".".concat(filename.split('.').pop());
+  Handlebars.registerHelper('fetchExtension', function (filename) {
+    var extension = ".".concat(filename.split('.').pop()); // Workaround to prevent extension returning as .gz
+
+    if (extension == '.gz') {
+      extension = '.tar.gz';
+    }
+
+    return extension;
   });
   var LTS = detectLTS("".concat(variant, "-").concat(jvmVariant));
   var styles = "\n  .download-last-version:after {\n      content: \"".concat(LTS, "\";\n  }\n  ");
@@ -3958,7 +3926,6 @@ function buildLatestHTML(releasesJson) {
 
     var binary_constructor = {
       type: binary_type,
-      extension: getBinaryExt(platform),
       link: releaseAsset.binary.package.link,
       checksum: releaseAsset.binary.package.checksum,
       size: Math.floor(releaseAsset.binary.package.size / 1000 / 1000)
@@ -3967,7 +3934,6 @@ function buildLatestHTML(releasesJson) {
     if (releaseAsset.binary.installer) {
       binary_constructor.installer_link = releaseAsset.binary.installer.link;
       binary_constructor.installer_checksum = releaseAsset.binary.installer.checksum;
-      binary_constructor.installer_extension = getInstallerExt(platform);
       binary_constructor.installer_size = Math.floor(releaseAsset.binary.installer.size / 1000 / 1000);
     } // Add the new binary to the release asset
 
@@ -4220,7 +4186,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var _require = require('./common'),
     findPlatform = _require.findPlatform,
-    getBinaryExt = _require.getBinaryExt,
     getSupportedVersion = _require.getSupportedVersion,
     getOfficialName = _require.getOfficialName,
     getPlatformOrder = _require.getPlatformOrder,
@@ -4283,6 +4248,15 @@ module.exports.load = function () {
   });
   Handlebars.registerHelper('fetchArch', function (title) {
     return title.split(' ')[1];
+  });
+  Handlebars.registerHelper('fetchExtension', function (filename) {
+    var extension = ".".concat(filename.split('.').pop()); // Workaround to prevent extension returning as .gz
+
+    if (extension == '.gz') {
+      extension = '.tar.gz';
+    }
+
+    return extension;
   });
   var LTS = detectLTS("".concat(variant, "-").concat(jvmVariant));
   var styles = "\n  .download-last-version:after {\n      content: \"".concat(LTS, "\";\n  }\n  ");
@@ -4348,7 +4322,6 @@ function buildUpstreamHTML(releasesJson) {
 
     var binary_constructor = {
       type: binary_type,
-      extension: getBinaryExt(platform),
       link: releaseAsset.package.link,
       signature_link: releaseAsset.package.signature_link,
       size: Math.floor(releaseAsset.package.size / 1000 / 1000)
@@ -4684,8 +4657,6 @@ module.exports={
         "os": "linux",
         "architecture": "x64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": ".run",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4709,8 +4680,6 @@ module.exports={
         "os": "alpine-linux",
         "architecture": "x64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4727,8 +4696,6 @@ module.exports={
         "os": "linux",
         "architecture": "x64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": ".run",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4751,8 +4718,6 @@ module.exports={
         "os": "windows",
         "architecture": "x32"
       },
-      "binaryExtension": ".zip",
-      "installerExtension": ".msi",
       "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
       "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
       "checksumCommand": "certutil -hashfile FILENAME SHA256",
@@ -4769,8 +4734,6 @@ module.exports={
         "os": "windows",
         "architecture": "x64"
       },
-      "binaryExtension": ".zip",
-      "installerExtension": ".msi",
       "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
       "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
       "checksumCommand": "certutil -hashfile FILENAME SHA256",
@@ -4780,6 +4743,22 @@ module.exports={
       "supported_version": "2012r2 or later"
     },
     {
+      "officialName": "Windows aarch64",
+      "searchableName": "AARCH64_WIN",
+      "attributes": {
+        "heap_size": "normal",
+        "os": "windows",
+        "architecture": "aarch64"
+      },
+      "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
+      "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
+      "checksumCommand": "certutil -hashfile FILENAME SHA256",
+      "checksumAutoCommandHint": " (the command must be run using Command Prompt in the same directory you download the binary file and requires PowerShell 3.0+)",
+      "checksumAutoCommand": "powershell -command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  iwr -outf FILEHASHNAME FILEHASHURL\" && powershell \"$CHECKSUMVAR=($(Get-FileHash -Algorithm SHA256 -LiteralPath FILENAME | Format-List -Property Hash | Out-String) -replace \\\"Hash : \\\", \\\"\\\" -replace \\\"`r`n\\\", \\\"\\\"); Select-String -LiteralPath FILEHASHNAME -Pattern $CHECKSUMVAR | Format-List -Property FileName | Out-String\" | find /i \"FILEHASHNAME\">Nul && ( echo \"FILENAME: The SHA-256 fingerprint matches\" ) || ( echo \"FILENAME: The SHA-256 fingerprint does NOT match\" )",
+      "osDetectionString": "not-to-be-detected",
+      "supported_version": "2016 or later"
+    },
+    {
       "officialName": "Windows x64 Large Heap",
       "searchableName": "X64_WINXL",
       "attributes": {
@@ -4787,8 +4766,6 @@ module.exports={
         "os": "windows",
         "architecture": "x64"
       },
-      "binaryExtension": ".zip",
-      "installerExtension": ".msi",
       "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
       "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
       "checksumCommand": "certutil -hashfile FILENAME SHA256",
@@ -4805,8 +4782,6 @@ module.exports={
         "os": "mac",
         "architecture": "x64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": ".pkg",
       "installCommand": "tar -xf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/Contents/Home/bin:$PATH",
       "checksumCommand": "shasum -a 256 FILENAME",
@@ -4823,8 +4798,6 @@ module.exports={
         "os": "mac",
         "architecture": "x64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": ".pkg",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/Contents/Home/bin:$PATH",
       "checksumCommand": "shasum -a 256 FILENAME",
@@ -4841,8 +4814,6 @@ module.exports={
         "os": "linux",
         "architecture": "s390x"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4859,8 +4830,6 @@ module.exports={
         "os": "linux",
         "architecture": "s390x"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": ".run",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4877,8 +4846,6 @@ module.exports={
         "os": "linux",
         "architecture": "ppc64le"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4895,8 +4862,6 @@ module.exports={
         "os": "linux",
         "architecture": "ppc64le"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": ".run",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4913,8 +4878,6 @@ module.exports={
         "os": "linux",
         "architecture": "aarch64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4931,8 +4894,6 @@ module.exports={
         "os": "linux",
         "architecture": "aarch64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4949,8 +4910,6 @@ module.exports={
         "os": "linux",
         "architecture": "arm"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar xzf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4967,8 +4926,6 @@ module.exports={
         "os": "solaris",
         "architecture": "sparcv9"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "gunzip -c FILENAME | tar xf -",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -4985,8 +4942,6 @@ module.exports={
         "os": "solaris",
         "architecture": "x64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "gunzip -c FILENAME | tar xf -",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
@@ -5003,8 +4958,6 @@ module.exports={
         "os": "aix",
         "architecture": "ppc64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "gunzip -c FILENAME | tar xf -",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "shasum -a 256 FILENAME",
@@ -5021,8 +4974,6 @@ module.exports={
         "os": "linux",
         "architecture": "riscv64"
       },
-      "binaryExtension": ".tar.gz",
-      "installerExtension": "no-installer-available",
       "installCommand": "tar -xf FILENAME",
       "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
       "checksumCommand": "sha256sum FILENAME",
