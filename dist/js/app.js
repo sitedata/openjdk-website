@@ -2701,8 +2701,6 @@ require("core-js/modules/es7.symbol.async-iterator.js");
 
 require("core-js/modules/es6.symbol.js");
 
-require("core-js/modules/es6.function.name.js");
-
 require("core-js/modules/es6.regexp.to-string.js");
 
 require("core-js/modules/es6.regexp.match.js");
@@ -2722,6 +2720,8 @@ require("core-js/modules/es6.string.ends-with.js");
 require("core-js/modules/es7.array.includes.js");
 
 require("core-js/modules/es6.string.includes.js");
+
+require("core-js/modules/es6.function.name.js");
 
 require("core-js/modules/es6.regexp.replace.js");
 
@@ -2750,6 +2750,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 // prefix for assets (e.g. logo)
 var _require = require('../json/config'),
     platforms = _require.platforms,
+    installCommands = _require.installCommands,
     variants = _require.variants; // Enables things like 'lookup["X64_MAC"]'
 
 
@@ -2767,7 +2768,7 @@ try {
     var _variant3 = _step.value;
 
     if (_variant3.default) {
-      defaultVariant = _variant3.searchableName.split('-')[0];
+      defaultVariant = _variant3.searchableName;
     }
   }
 } catch (err) {
@@ -2852,32 +2853,51 @@ module.exports.getSupportedVersion = function (searchableName) {
   }
 
   return supported_version;
-}; // gets the INSTALLATION COMMAND when you pass in 'searchableName'
+}; // gets the INSTALLATION COMMANDS when you pass in 'os'
 
 
-module.exports.getInstallCommand = function (searchableName) {
-  return lookup[searchableName].installCommand;
-}; // gets the CHECKSUM COMMAND when you pass in 'searchableName'
+module.exports.getInstallCommands = function (os) {
+  var installObject;
 
+  switch (os) {
+    case 'windows':
+      installObject = fetchInstallObject('powershell');
+      break;
 
-module.exports.getChecksumCommand = function (searchableName) {
-  return lookup[searchableName].checksumCommand;
-}; // gets the CHECKSUM AUTO COMMAND HINT when you pass in 'searchableName'
+    case 'aix':
+      installObject = fetchInstallObject('gunzip');
+      break;
 
+    case 'solaris':
+      installObject = fetchInstallObject('gunzip');
+      break;
 
-module.exports.getChecksumAutoCommandHint = function (searchableName) {
-  return lookup[searchableName].checksumAutoCommandHint;
-}; // gets the CHECKSUM AUTO COMMAND when you pass in 'searchableName'
+    default:
+      // defaults to tar installation
+      installObject = fetchInstallObject('tar');
+  }
 
+  return installObject;
+};
 
-module.exports.getChecksumAutoCommand = function (searchableName) {
-  return lookup[searchableName].checksumAutoCommand;
-}; // gets the PATH COMMAND when you pass in 'searchableName'
+function fetchInstallObject(command) {
+  var _iterator2 = _createForOfIteratorHelper(installCommands),
+      _step2;
 
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var installCommand = _step2.value;
 
-module.exports.getPathCommand = function (searchableName) {
-  return lookup[searchableName].pathCommand;
-}; // This function returns an object containing all information about the user's OS.
+      if (command == installCommand.name) {
+        return installCommand;
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+} // This function returns an object containing all information about the user's OS.
 // The OS info comes from the 'platforms' array, which in turn comes from 'config.json'.
 // `platform` comes from `platform.js`, which should be included on the page where `detectOS` is used.
 
@@ -2895,12 +2915,12 @@ module.exports.detectOS = function () {
 };
 
 module.exports.detectLTS = function (version) {
-  var _iterator2 = _createForOfIteratorHelper(variants),
-      _step2;
+  var _iterator3 = _createForOfIteratorHelper(variants),
+      _step3;
 
   try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var _variant = _step2.value;
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var _variant = _step3.value;
 
       if (_variant.searchableName == version) {
         if (_variant.lts == true) {
@@ -2913,9 +2933,9 @@ module.exports.detectLTS = function (version) {
       }
     }
   } catch (err) {
-    _iterator2.e(err);
+    _iterator3.e(err);
   } finally {
-    _iterator2.f();
+    _iterator3.f();
   }
 };
 
@@ -3124,7 +3144,7 @@ module.exports.setRadioSelectors = function () {
           btnLabel.innerHTML += "<span>".concat(variant.label, "</span>");
         }
       } else {
-        btnLabel.innerHTML += "<span>".concat(variant.jvm, "</span>");
+        btnLabel.innerHTML += "<span>".concat(variant, "</span>");
       }
 
       element.appendChild(btnLabel);
@@ -3132,27 +3152,37 @@ module.exports.setRadioSelectors = function () {
     }
   }
 
-  var _iterator3 = _createForOfIteratorHelper(variants),
-      _step3;
+  var _iterator4 = _createForOfIteratorHelper(variants),
+      _step4;
 
   try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var _variant2 = _step3.value;
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var _variant2 = _step4.value;
 
-      var splitVariant = _variant2.searchableName.split('-');
+      var _iterator6 = _createForOfIteratorHelper(_variant2.jvm),
+          _step6;
 
-      var jdkName = splitVariant[0];
-      var jvmName = splitVariant[1];
-      createRadioButtons(jdkName, 'jdk', _variant2, jdkSelector);
+      try {
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var jvmVariantOption = _step6.value;
+          var jdkName = _variant2.searchableName;
+          var jvmName = jvmVariantOption.toLowerCase();
+          createRadioButtons(jdkName, 'jdk', _variant2, jdkSelector);
 
-      if (jvmSelector) {
-        createRadioButtons(jvmName, 'jvm', _variant2, jvmSelector);
+          if (jvmSelector) {
+            createRadioButtons(jvmName, 'jvm', jvmVariantOption, jvmSelector);
+          }
+        }
+      } catch (err) {
+        _iterator6.e(err);
+      } finally {
+        _iterator6.f();
       }
     }
   } catch (err) {
-    _iterator3.e(err);
+    _iterator4.e(err);
   } finally {
-    _iterator3.f();
+    _iterator4.f();
   }
 
   var jdkButtons = document.getElementsByName('jdk');
@@ -3180,12 +3210,12 @@ module.exports.setRadioSelectors = function () {
     };
   }
 
-  var _iterator4 = _createForOfIteratorHelper(jdkButtons),
-      _step4;
+  var _iterator5 = _createForOfIteratorHelper(jdkButtons),
+      _step5;
 
   try {
-    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-      var jdkButton = _step4.value;
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+      var jdkButton = _step5.value;
 
       if (jdkButton.value === variant) {
         jdkButton.setAttribute('checked', 'checked');
@@ -3193,9 +3223,9 @@ module.exports.setRadioSelectors = function () {
       }
     }
   } catch (err) {
-    _iterator4.e(err);
+    _iterator5.e(err);
   } finally {
-    _iterator4.f();
+    _iterator5.f();
   }
 
   for (var i = 0; i < jvmButtons.length; i++) {
@@ -3441,19 +3471,17 @@ require("core-js/modules/es6.function.name.js");
 
 require("core-js/modules/es6.string.link.js");
 
+require("core-js/modules/es6.regexp.split.js");
+
 var _require = require('./common'),
     detectOS = _require.detectOS,
     findPlatform = _require.findPlatform,
-    getChecksumCommand = _require.getChecksumCommand,
-    getInstallCommand = _require.getInstallCommand,
+    getInstallCommands = _require.getInstallCommands,
     getOfficialName = _require.getOfficialName,
-    getPathCommand = _require.getPathCommand,
     getPlatformOrder = _require.getPlatformOrder,
     loadAssetInfo = _require.loadAssetInfo,
     orderPlatforms = _require.orderPlatforms,
-    setRadioSelectors = _require.setRadioSelectors,
-    getChecksumAutoCommandHint = _require.getChecksumAutoCommandHint,
-    getChecksumAutoCommand = _require.getChecksumAutoCommand;
+    setRadioSelectors = _require.setRadioSelectors;
 
 var _require2 = require('./common'),
     jvmVariant = _require2.jvmVariant,
@@ -3465,6 +3493,15 @@ var platformSelector = document.getElementById('platform-selector');
 
 module.exports.load = function () {
   setRadioSelectors();
+  Handlebars.registerHelper('fetchExtension', function (filename) {
+    var extension = ".".concat(filename.split('.').pop()); // Workaround to prevent extension returning as .gz
+
+    if (extension == '.gz') {
+      extension = '.tar.gz';
+    }
+
+    return extension;
+  });
   loadAssetInfo(variant, jvmVariant, 'ga', undefined, undefined, 'latest', 'adoptopenjdk', buildInstallationHTML, function () {
     errorContainer.innerHTML = '<p>Error... no installation information has been found!</p>';
     loading.innerHTML = ''; // remove the loading dots
@@ -3489,14 +3526,15 @@ function buildInstallationHTML(releasesJson) {
       ASSETOBJECT.thisBinaryFilename = eachAsset.package.name;
       ASSETOBJECT.thisChecksum = eachAsset.package.checksum;
       ASSETOBJECT.thisChecksumLink = eachAsset.package.checksum_link;
-      ASSETOBJECT.thisChecksumFilename = eachAsset.package.name.replace(ASSETOBJECT.thisBinaryExtension, '.sha256.txt');
-      ASSETOBJECT.thisUnzipCommand = getInstallCommand(ASSETOBJECT.thisPlatform).replace('FILENAME', ASSETOBJECT.thisBinaryFilename);
-      ASSETOBJECT.thisChecksumCommand = getChecksumCommand(ASSETOBJECT.thisPlatform).replace('FILENAME', ASSETOBJECT.thisBinaryFilename); // the check sum auto command hint is always printed,
+      ASSETOBJECT.os = eachAsset.os;
+      ASSETOBJECT.thisInstallCommands = getInstallCommands(ASSETOBJECT.os);
+      ASSETOBJECT.thisUnzipCommand = ASSETOBJECT.thisInstallCommands.installCommand.replace('FILENAME', ASSETOBJECT.thisBinaryFilename);
+      ASSETOBJECT.thisChecksumCommand = ASSETOBJECT.thisInstallCommands.checksumCommand.replace('FILENAME', ASSETOBJECT.thisBinaryFilename); // the check sum auto command hint is always printed,
       // so we just configure with empty string if not present
 
-      ASSETOBJECT.thisChecksumAutoCommandHint = getChecksumAutoCommandHint(ASSETOBJECT.thisPlatform) || ''; // build download sha256 and verify auto command
+      ASSETOBJECT.thisChecksumAutoCommandHint = ASSETOBJECT.thisInstallCommands.checksumAutoCommandHint || ''; // build download sha256 and verify auto command
 
-      var thisChecksumAutoCommand = getChecksumAutoCommand(ASSETOBJECT.thisPlatform);
+      var thisChecksumAutoCommand = ASSETOBJECT.thisInstallCommands.checksumAutoCommand;
       var sha256FileName = ASSETOBJECT.thisChecksumLink;
       var separator = sha256FileName.lastIndexOf('/');
 
@@ -3506,7 +3544,7 @@ function buildInstallationHTML(releasesJson) {
 
       ASSETOBJECT.thisChecksumAutoCommand = thisChecksumAutoCommand.replace(/FILEHASHURL/g, ASSETOBJECT.thisChecksumLink).replace(/FILEHASHNAME/g, sha256FileName).replace(/FILENAME/g, ASSETOBJECT.thisBinaryFilename);
       var dirName = releasesJson[0].release_name + (eachAsset.image_type === 'jre' ? '-jre' : '');
-      ASSETOBJECT.thisPathCommand = getPathCommand(ASSETOBJECT.thisPlatform).replace('DIRNAME', dirName);
+      ASSETOBJECT.thisPathCommand = ASSETOBJECT.thisInstallCommands.pathCommand.replace('DIRNAME', dirName);
 
       if (ASSETOBJECT.thisPlatformExists) {
         ASSETARRAY.push(ASSETOBJECT);
@@ -3603,7 +3641,7 @@ function copyElementTextContent(target) {
   document.body.removeChild(input);
 }
 
-},{"./common":115,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108}],119:[function(require,module,exports){
+},{"./common":115,"core-js/modules/es6.array.from.js":90,"core-js/modules/es6.function.name.js":92,"core-js/modules/es6.regexp.replace.js":100,"core-js/modules/es6.regexp.split.js":102,"core-js/modules/es6.string.iterator.js":107,"core-js/modules/es6.string.link.js":108}],119:[function(require,module,exports){
 "use strict";
 
 require("core-js/modules/es6.regexp.constructor.js");
@@ -3822,7 +3860,6 @@ var _require = require('./common'),
     getSupportedVersion = _require.getSupportedVersion,
     getOfficialName = _require.getOfficialName,
     getPlatformOrder = _require.getPlatformOrder,
-    getVariantObject = _require.getVariantObject,
     detectLTS = _require.detectLTS,
     detectEA = _require.detectEA,
     loadLatestAssets = _require.loadLatestAssets,
@@ -3853,7 +3890,7 @@ module.exports.load = function () {
 
     return extension;
   });
-  var LTS = detectLTS("".concat(variant, "-").concat(jvmVariant));
+  var LTS = detectLTS(variant);
   var styles = "\n  .download-last-version:after {\n      content: \"".concat(LTS, "\";\n  }\n  ");
 
   if (LTS !== null) {
@@ -3871,16 +3908,7 @@ module.exports.load = function () {
 };
 
 function buildLatestHTML(releasesJson) {
-  // Populate with description
-  var variantObject = getVariantObject(variant + '-' + jvmVariant);
-
-  if (variantObject.descriptionLink) {
-    document.getElementById('description_header').innerHTML = "What is ".concat(variantObject.description, "?");
-    document.getElementById('description_link').innerHTML = 'Find out here';
-    document.getElementById('description_link').href = variantObject.descriptionLink;
-  } // Array of releases that have binaries we want to display
-
-
+  // Array of releases that have binaries we want to display
   var releases = [];
   releasesJson.forEach(function (releaseAsset) {
     var platform = findPlatform(releaseAsset.binary); // Skip this asset if its platform could not be matched (see the website's 'config.json')
@@ -4258,7 +4286,7 @@ module.exports.load = function () {
 
     return extension;
   });
-  var LTS = detectLTS("".concat(variant, "-").concat(jvmVariant));
+  var LTS = detectLTS(variant);
   var styles = "\n  .download-last-version:after {\n      content: \"".concat(LTS, "\";\n  }\n  ");
 
   if (LTS !== null) {
@@ -4519,133 +4547,79 @@ function filterTable(string, type, string1) {
 module.exports={
   "variants": [
     {
-      "searchableName": "openjdk8-hotspot",
-      "officialName": "OpenJDK 8 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk8",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 8",
       "lts": true
     },
     {
-      "searchableName": "openjdk8-openj9",
-      "officialName": "OpenJDK 8 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 8",
-      "lts": true,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk9-hotspot",
-      "officialName": "OpenJDK 9 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk9",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 9",
       "lts": false
     },
     {
-      "searchableName": "openjdk9-openj9",
-      "officialName": "OpenJDK 9 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 9",
-      "lts": false,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk10-hotspot",
-      "officialName": "OpenJDK 10 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk10",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 10",
       "lts": false
     },
     {
-      "searchableName": "openjdk10-openj9",
-      "officialName": "OpenJDK 10 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 10",
-      "lts": false,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk11-hotspot",
-      "officialName": "OpenJDK 11 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk11",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 11",
-      "lts": true,
-      "default": true
+      "default": true,
+      "lts": true
     },
     {
-      "searchableName": "openjdk11-openj9",
-      "officialName": "OpenJDK 11 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 11",
-      "lts": true,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk12-hotspot",
-      "officialName": "OpenJDK 12 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk12",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 12",
       "lts": false
     },
     {
-      "searchableName": "openjdk12-openj9",
-      "officialName": "OpenJDK 12 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 12",
-      "lts": false,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk13-hotspot",
-      "officialName": "OpenJDK 13 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk13",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 13",
       "lts": false
     },
     {
-      "searchableName": "openjdk13-openj9",
-      "officialName": "OpenJDK 13 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 13",
-      "lts": false,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk14-hotspot",
-      "officialName": "OpenJDK 14 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk14",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 14",
       "lts": false
     },
     {
-      "searchableName": "openjdk14-openj9",
-      "officialName": "OpenJDK 14 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 14",
-      "lts": false,
-      "descriptionLink": "https://www.eclipse.org/openj9"
-    },
-    {
-      "searchableName": "openjdk15-hotspot",
-      "officialName": "OpenJDK 15 with HotSpot",
-      "jvm": "HotSpot",
+      "searchableName": "openjdk15",
+      "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 15",
       "lts": "latest"
+    }
+  ],
+  "installCommands": [
+    {
+      "name": "tar",
+      "installCommand": "tar xzf FILENAME",
+      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
+      "checksumCommand": "sha256sum FILENAME",
+      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
+      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c"
     },
     {
-      "searchableName": "openjdk15-openj9",
-      "officialName": "OpenJDK 15 with Eclipse OpenJ9",
-      "description": "Eclipse OpenJ9",
-      "jvm": "OpenJ9",
-      "label": "OpenJDK 15",
-      "lts": "latest",
-      "descriptionLink": "https://www.eclipse.org/openj9"
+      "name": "gunzip",
+      "installCommand": "gunzip -c FILENAME | tar xf -",
+      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
+      "checksumCommand": "sha256sum FILENAME",
+      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
+      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c"
+    },
+    {
+        "name": "powershell",
+        "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
+        "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
+        "checksumCommand": "certutil -hashfile FILENAME SHA256",
+        "checksumAutoCommandHint": " (the command must be run using Command Prompt in the same directory you download the binary file and requires PowerShell 3.0+)",
+        "checksumAutoCommand": "powershell -command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  iwr -outf FILEHASHNAME FILEHASHURL\" && powershell \"$CHECKSUMVAR=($(Get-FileHash -Algorithm SHA256 -LiteralPath FILENAME | Format-List -Property Hash | Out-String) -replace \\\"Hash : \\\", \\\"\\\" -replace \\\"`r`n\\\", \\\"\\\"); Select-String -LiteralPath FILEHASHNAME -Pattern $CHECKSUMVAR | Format-List -Property FileName | Out-String\" | find /i \"FILEHASHNAME\">Nul && ( echo \"FILENAME: The SHA-256 fingerprint matches\" ) || ( echo \"FILENAME: The SHA-256 fingerprint does NOT match\" )"
     }
   ],
   "platforms": [
@@ -4657,11 +4631,6 @@ module.exports={
         "os": "linux",
         "architecture": "x64"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "Linux Mint Debian Fedora FreeBSD Gentoo Haiku Kubuntu OpenBSD Red Hat RHEL SuSE Ubuntu Xubuntu hpwOS webOS Tizen",
       "supported_version": {
         "_comment_": "Version numbers use >= logic and need to be specified in ascending order",
@@ -4680,11 +4649,6 @@ module.exports={
         "os": "alpine-linux",
         "architecture": "x64"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "Alpine Linux 3.5 or later"
     },
@@ -4696,11 +4660,6 @@ module.exports={
         "os": "linux",
         "architecture": "x64"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": {
         "_comment_": "Version numbers use >= logic and need to be specified in ascending order",
@@ -4718,11 +4677,6 @@ module.exports={
         "os": "windows",
         "architecture": "x32"
       },
-      "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
-      "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
-      "checksumCommand": "certutil -hashfile FILENAME SHA256",
-      "checksumAutoCommandHint": " (the command must be run using Command Prompt in the same directory you download the binary file and requires PowerShell 3.0+)",
-      "checksumAutoCommand": "powershell -command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  iwr -outf FILEHASHNAME FILEHASHURL\" && powershell \"$CHECKSUMVAR=($(Get-FileHash -Algorithm SHA256 -LiteralPath FILENAME | Format-List -Property Hash | Out-String) -replace \\\"Hash : \\\", \\\"\\\" -replace \\\"`r`n\\\", \\\"\\\"); Select-String -LiteralPath FILEHASHNAME -Pattern $CHECKSUMVAR | Format-List -Property FileName | Out-String\" | find /i \"FILEHASHNAME\">Nul && ( echo \"FILENAME: The SHA-256 fingerprint matches\" ) || ( echo \"FILENAME: The SHA-256 fingerprint does NOT match\" )",
       "osDetectionString": "Windows Win Cygwin Windows Server 2008 R2 / 7 Windows Server 2008 / Vista Windows XP",
       "supported_version": "2012r2 or later"
     },
@@ -4734,11 +4688,6 @@ module.exports={
         "os": "windows",
         "architecture": "x64"
       },
-      "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
-      "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
-      "checksumCommand": "certutil -hashfile FILENAME SHA256",
-      "checksumAutoCommandHint": " (the command must be run using Command Prompt in the same directory you download the binary file and requires PowerShell 3.0+)",
-      "checksumAutoCommand": "powershell -command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  iwr -outf FILEHASHNAME FILEHASHURL\" && powershell \"$CHECKSUMVAR=($(Get-FileHash -Algorithm SHA256 -LiteralPath FILENAME | Format-List -Property Hash | Out-String) -replace \\\"Hash : \\\", \\\"\\\" -replace \\\"`r`n\\\", \\\"\\\"); Select-String -LiteralPath FILEHASHNAME -Pattern $CHECKSUMVAR | Format-List -Property FileName | Out-String\" | find /i \"FILEHASHNAME\">Nul && ( echo \"FILENAME: The SHA-256 fingerprint matches\" ) || ( echo \"FILENAME: The SHA-256 fingerprint does NOT match\" )",
       "osDetectionString": "Windows Win Cygwin Windows Server 2008 R2 / 7 Windows Server 2008 / Vista Windows XP",
       "supported_version": "2012r2 or later"
     },
@@ -4750,11 +4699,6 @@ module.exports={
         "os": "windows",
         "architecture": "aarch64"
       },
-      "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
-      "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
-      "checksumCommand": "certutil -hashfile FILENAME SHA256",
-      "checksumAutoCommandHint": " (the command must be run using Command Prompt in the same directory you download the binary file and requires PowerShell 3.0+)",
-      "checksumAutoCommand": "powershell -command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  iwr -outf FILEHASHNAME FILEHASHURL\" && powershell \"$CHECKSUMVAR=($(Get-FileHash -Algorithm SHA256 -LiteralPath FILENAME | Format-List -Property Hash | Out-String) -replace \\\"Hash : \\\", \\\"\\\" -replace \\\"`r`n\\\", \\\"\\\"); Select-String -LiteralPath FILEHASHNAME -Pattern $CHECKSUMVAR | Format-List -Property FileName | Out-String\" | find /i \"FILEHASHNAME\">Nul && ( echo \"FILENAME: The SHA-256 fingerprint matches\" ) || ( echo \"FILENAME: The SHA-256 fingerprint does NOT match\" )",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "2016 or later"
     },
@@ -4766,11 +4710,6 @@ module.exports={
         "os": "windows",
         "architecture": "x64"
       },
-      "installCommand": "Expand-Archive -Path .\\FILENAME -DestinationPath .",
-      "pathCommand": "set PATH=%cd%\\DIRNAME\\bin;%PATH%",
-      "checksumCommand": "certutil -hashfile FILENAME SHA256",
-      "checksumAutoCommandHint": " (the command must be run using Command Prompt in the same directory you download the binary file and requires PowerShell 3.0+)",
-      "checksumAutoCommand": "powershell -command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  iwr -outf FILEHASHNAME FILEHASHURL\" && powershell \"$CHECKSUMVAR=($(Get-FileHash -Algorithm SHA256 -LiteralPath FILENAME | Format-List -Property Hash | Out-String) -replace \\\"Hash : \\\", \\\"\\\" -replace \\\"`r`n\\\", \\\"\\\"); Select-String -LiteralPath FILEHASHNAME -Pattern $CHECKSUMVAR | Format-List -Property FileName | Out-String\" | find /i \"FILEHASHNAME\">Nul && ( echo \"FILENAME: The SHA-256 fingerprint matches\" ) || ( echo \"FILENAME: The SHA-256 fingerprint does NOT match\" )",
       "osDetectionString": "Windows Win Cygwin Windows Server 2008 R2 / 7 Windows Server 2008 / Vista Windows XP",
       "supported_version": "2012r2 or later"
     },
@@ -4782,11 +4721,6 @@ module.exports={
         "os": "mac",
         "architecture": "x64"
       },
-      "installCommand": "tar -xf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/Contents/Home/bin:$PATH",
-      "checksumCommand": "shasum -a 256 FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "curl -O -L -s FILEHASHURL && shasum -a 256 -c FILEHASHNAME",
       "osDetectionString": "Mac OS X OSX macOS Macintosh",
       "supported_version": "10.10 or later"
     },
@@ -4798,11 +4732,6 @@ module.exports={
         "os": "mac",
         "architecture": "x64"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/Contents/Home/bin:$PATH",
-      "checksumCommand": "shasum -a 256 FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "curl -O -L -s FILEHASHURL && shasum -a 256 -c FILEHASHNAME",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "10.10 or later"
     },
@@ -4814,11 +4743,6 @@ module.exports={
         "os": "linux",
         "architecture": "s390x"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4830,11 +4754,6 @@ module.exports={
         "os": "linux",
         "architecture": "s390x"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4846,11 +4765,6 @@ module.exports={
         "os": "linux",
         "architecture": "ppc64le"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4862,11 +4776,6 @@ module.exports={
         "os": "linux",
         "architecture": "ppc64le"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4878,11 +4787,6 @@ module.exports={
         "os": "linux",
         "architecture": "aarch64"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4894,11 +4798,6 @@ module.exports={
         "os": "linux",
         "architecture": "aarch64"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4910,11 +4809,6 @@ module.exports={
         "os": "linux",
         "architecture": "arm"
       },
-      "installCommand": "tar xzf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.17 or higher"
     },
@@ -4926,11 +4820,6 @@ module.exports={
         "os": "solaris",
         "architecture": "sparcv9"
       },
-      "installCommand": "gunzip -c FILENAME | tar xf -",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "solaris 10,11"
     },
@@ -4942,11 +4831,6 @@ module.exports={
         "os": "solaris",
         "architecture": "x64"
       },
-      "installCommand": "gunzip -c FILENAME | tar xf -",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "solaris 10,11"
     },
@@ -4958,11 +4842,6 @@ module.exports={
         "os": "aix",
         "architecture": "ppc64"
       },
-      "installCommand": "gunzip -c FILENAME | tar xf -",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "shasum -a 256 FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "curl -O -L FILEHASHURL && shasum -a 256 -c FILEHASHNAME",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "7.1 TL4 or later"
     },
@@ -4974,11 +4853,6 @@ module.exports={
         "os": "linux",
         "architecture": "riscv64"
       },
-      "installCommand": "tar -xf FILENAME",
-      "pathCommand": "export PATH=$PWD/DIRNAME/bin:$PATH",
-      "checksumCommand": "sha256sum FILENAME",
-      "checksumAutoCommandHint": " (the command must be run on a terminal in the same directory you download the binary file)",
-      "checksumAutoCommand": "wget -O- -q -T 1 -t 1 FILEHASHURL | sha256sum -c",
       "osDetectionString": "not-to-be-detected",
       "supported_version": "glibc version 2.27 or higher"
     }
