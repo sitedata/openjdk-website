@@ -4054,7 +4054,7 @@ global.populateFilters = function (filter) {
         var option = document.createElement('option');
         option.text = os;
         option.value = os;
-        osFilter.append(option);
+        osFilter.appendChild(option);
       }
     } catch (err) {
       _iterator2.e(err);
@@ -4081,7 +4081,7 @@ global.populateFilters = function (filter) {
 
         _option.text = arch;
         _option.value = arch;
-        archFilter.append(_option);
+        archFilter.appendChild(_option);
       }
     } catch (err) {
       _iterator3.e(err);
