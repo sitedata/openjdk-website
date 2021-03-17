@@ -4629,6 +4629,12 @@ module.exports={
       "searchableName": "openjdk15",
       "jvm": ["HotSpot", "OpenJ9"],
       "label": "OpenJDK 15",
+      "lts": "false"
+    },
+    {
+      "searchableName": "openjdk16",
+      "jvm": ["HotSpot", "OpenJ9"],
+      "label": "OpenJDK 16",
       "lts": "latest"
     }
   ],
