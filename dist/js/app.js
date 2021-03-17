@@ -4684,7 +4684,7 @@ module.exports={
       }
     },
     {
-      "officialName": "Linux x64 (Alpine)",
+      "officialName": "Alpine x64",
       "searchableName": "LINUXALPINE",
       "attributes": {
         "heap_size": "normal",
