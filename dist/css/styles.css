@@ -1374,19 +1374,19 @@ div#latest-selector {
   .archive-platforms span.tick {
     right: -0.3rem; } }
 
-main .support {
+main .align {
   max-width: 40rem;
   margin: 0 auto;
   width: 80%; }
 
-main .support h2 {
+main .align h2 {
   text-align: center; }
 
 .tick-demo img {
   height: 1.3rem !important;
   padding-top: 0px; }
 
-.support table, .support th, .support td {
+.align table, .align th, .align td {
   border: 1px solid black;
   padding-left: 1rem;
   padding-right: 1rem;
