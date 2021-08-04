@@ -3930,6 +3930,13 @@ module.exports.load = function () {
 
     return extension;
   });
+  Handlebars.registerHelper('if_eq', function (a, b, opts) {
+    if (a == b) {
+      return opts.fn(this);
+    } else {
+      return opts.inverse(this);
+    }
+  });
   var LTS = detectLTS(variant);
   var styles = "\n  .download-last-version:after {\n      content: \"".concat(LTS, "\";\n  }\n  ");
 
@@ -3988,6 +3995,7 @@ function buildLatestHTML(releasesJson) {
         release_link: releaseAsset.release_link,
         release_datetime: moment(releaseAsset.timestamp).format('YYYY-MM-DD hh:mm:ss'),
         early_access: detectEA(releaseAsset.version),
+        vendor: releaseAsset.vendor,
         binaries: []
       };
     }
