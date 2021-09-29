@@ -3346,25 +3346,12 @@ document.addEventListener('DOMContentLoaded', function () {
 },{"./archive":115,"./common":116,"./index":118,"./installation":119,"./nightly":120,"./releases":121,"./testimonials":122,"./upstream":123,"core-js/modules/es6.regexp.replace.js":103,"core-js/modules/es6.regexp.split.js":105}],118:[function(require,module,exports){
 "use strict";
 
-require("core-js/modules/es6.function.name.js");
-
-require("core-js/modules/es6.object.keys.js");
-
-require("core-js/modules/es6.string.includes.js");
-
-require("core-js/modules/es7.array.includes.js");
-
-require("core-js/modules/es6.string.link.js");
-
 require("core-js/modules/es6.regexp.replace.js");
 
 var _require = require('./common'),
     detectOS = _require.detectOS,
-    findPlatform = _require.findPlatform,
     loadLatestAssets = _require.loadLatestAssets,
-    makeQueryString = _require.makeQueryString,
-    setRadioSelectors = _require.setRadioSelectors,
-    setTickLink = _require.setTickLink;
+    setRadioSelectors = _require.setRadioSelectors;
 
 var _require2 = require('./common'),
     jvmVariant = _require2.jvmVariant,
@@ -3375,10 +3362,9 @@ var loading = document.getElementById('loading');
 var errorContainer = document.getElementById('error-container');
 var dlText = document.getElementById('dl-text');
 var dlLatest = document.getElementById('dl-latest');
+var dlLatestText = document.getElementById('dl-latest-text');
 var dlArchive = document.getElementById('dl-archive');
 var dlOther = document.getElementById('dl-other');
-var dlIcon = document.getElementById('dl-icon');
-var dlIcon2 = document.getElementById('dl-icon-2');
 var dlVersionText = document.getElementById('dl-version-text'); // When index page loads, run:
 
 module.exports.load = function () {
@@ -3393,12 +3379,8 @@ module.exports.load = function () {
 
   dlText.classList.remove('invisible');
 
-  var handleResponse = function handleResponse(releasesJson) {
-    if (!releasesJson) {
-      return;
-    }
-
-    buildHomepageHTML(releasesJson, {}, OS);
+  var handleResponse = function handleResponse() {
+    buildHomepageHTML(jvmVariant);
   };
 
   loadLatestAssets(variant, jvmVariant, 'latest', handleResponse, undefined, function () {
@@ -3417,61 +3399,15 @@ function removeRadioButtons() {
   }
 }
 
-function buildHomepageHTML(releasesJson, jckJSON, OS) {
-  var matchingFile = null; // if the OS has been detected...
-
-  if (OS) {
-    releasesJson.forEach(function (eachAsset) {
-      // iterate through the assets attached to this release
-      var uppercaseFilename = eachAsset.binary.package.name.toUpperCase();
-      var thisPlatform = findPlatform(eachAsset.binary); // firstly, check if a valid searchableName has been returned (i.e. the platform is recognised)...
-
-      if (thisPlatform) {
-        // secondly, check if the file has the expected file extension for that platform...
-        // (this filters out all non-binary attachments, e.g. SHA checksums - these contain the platform name, but are not binaries)
-        if (matchingFile == null) {
-          var uppercaseOSname = OS.searchableName.toUpperCase();
-
-          if (Object.keys(jckJSON).length !== 0) {
-            if (jckJSON[releasesJson.tag_name] && Object.prototype.hasOwnProperty.call(jckJSON[releasesJson.tag_name], uppercaseOSname)) {
-              document.getElementById('jck-approved-tick').classList.remove('hide');
-              setTickLink();
-            }
-          } // thirdly check if JDK or JRE (we want to serve JDK by default)
-
-
-          if (eachAsset.binary.image_type == 'jdk') {
-            // fourthly, check if the user's OS searchableName string matches part of this binary's name (e.g. ...X64_LINUX...)
-            if (uppercaseFilename.includes(uppercaseOSname)) {
-              matchingFile = eachAsset; // set the matchingFile variable to the object containing this binary
-            }
-          }
-        }
-      }
-    });
-  } // if there IS a matching binary for the user's OS...
-
-
-  if (matchingFile) {
-    if (matchingFile.binary.installer) {
-      dlLatest.href = matchingFile.binary.installer.link; // set the main download button's link to be the installer's download url
-    } else {
-      dlLatest.href = matchingFile.binary.package.link; // set the main download button's link to be the binary's download url
-
-      dlVersionText.innerHTML += " - ".concat(Math.floor(matchingFile.binary.package.size / 1000 / 1000), " MB");
-    } // set the download button's version number to the latest release
-
-
-    dlVersionText.innerHTML = matchingFile.release_name;
-  } else {
-    dlIcon.classList.add('hide'); // hide the download icon on the main button, to make it look less like you're going to get a download immediately
-
-    dlIcon2.classList.remove('hide'); // un-hide an arrow-right icon to show instead
-
-    dlLatest.href = "./releases.html?".concat(makeQueryString({
-      variant: variant,
-      jvmVariant: jvmVariant
-    })); // set the main download button's link to the latest releases page for all platforms.
+function buildHomepageHTML(jvmVariant) {
+  if (jvmVariant == 'hotspot') {
+    dlLatest.href = 'https://adoptium.net';
+    dlLatestText.textContent = 'adoptium.net';
+    dlVersionText.innerHTML = 'AdoptOpenJDK has moved...';
+  } else if (jvmVariant == 'openj9') {
+    dlLatest.href = 'https://developer.ibm.com/languages/java/semeru-runtimes/downloads';
+    dlLatestText.textContent = 'developer.ibm.com';
+    dlVersionText.innerHTML = 'AdoptOpenJDK has moved...';
   } // remove the loading dots, and make all buttons visible, with animated fade-in
 
 
@@ -3490,7 +3426,7 @@ function buildHomepageHTML(releasesJson, jckJSON, OS) {
   }, 1000);
 }
 
-},{"./common":116,"core-js/modules/es6.function.name.js":96,"core-js/modules/es6.object.keys.js":98,"core-js/modules/es6.regexp.replace.js":103,"core-js/modules/es6.string.includes.js":108,"core-js/modules/es6.string.link.js":110,"core-js/modules/es7.array.includes.js":113}],119:[function(require,module,exports){
+},{"./common":116,"core-js/modules/es6.regexp.replace.js":103}],119:[function(require,module,exports){
 "use strict";
 
 require("core-js/modules/es6.regexp.split.js");
