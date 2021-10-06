@@ -3401,7 +3401,7 @@ function removeRadioButtons() {
 
 function buildHomepageHTML(jvmVariant) {
   if (jvmVariant == 'hotspot') {
-    dlLatest.href = 'https://adoptium.net';
+    dlLatest.href = 'https://adoptium.net?variant=' + variant;
     dlLatestText.textContent = 'adoptium.net';
     dlVersionText.innerHTML = 'AdoptOpenJDK has moved...';
   } else if (jvmVariant == 'openj9') {
@@ -3932,6 +3932,7 @@ function buildLatestHTML(releasesJson) {
         release_datetime: moment(releaseAsset.timestamp).format('YYYY-MM-DD hh:mm:ss'),
         early_access: detectEA(releaseAsset.version),
         vendor: releaseAsset.vendor,
+        variant: variant,
         binaries: []
       };
     }
